@@ -1,0 +1,15 @@
+xmlfs - mount an xml file to a file system
+
+Nodes become directories with an index prepended to handle duplicates.
+Attribute become files with value in it.
+Node content is available in the #text files.
+
+Very early version. Currently handles simple XML, ASCII and read-only file structure. 
+More documentation will come.
+
+Depends on: FUSE (http://fuse.sourceforge.net/) and libxml2 (http://www.xmlsoft.org/).
+
+Copyright (c) 2009 Henrik Hallberg <halhen@k2h.se>
+Released under GPL 2 - see LICENSE for details.
+Please report bugs or feature requests by email.
+http://code.k2h.se

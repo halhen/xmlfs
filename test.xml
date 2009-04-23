@@ -1,0 +1,6 @@
+<root rattr="1">
+    <node attribute="attrib_value" />
+    <node attribute2="second node" />
+    <other attribute="attrib_value" />
+    <textcontent>some text</textcontent>
+</root>
