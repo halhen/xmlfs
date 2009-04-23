@@ -12,14 +12,7 @@
 #ifndef __XMLHELPERS_H_INCLUDED__
 #define __XMLHELPERS_H_INCLUDED__
 
-#include <string.h>
 #include <libxml/tree.h>
-
-#define INDEX_BASE 1
-#define CONTENT_FILENAME "#text"
-
-
-
 
 char* node_value(xmlElement* xel);
 void count_twins(xmlElement* el, int *twins_before, int *twins_total);

@@ -28,6 +28,7 @@
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 
+#include "global.h"
 #include "xmlhelpers.h"
 
 
@@ -38,7 +39,6 @@ char* create_formatted_name(xmlElement* el)
 {
     int ia, ib, ic;
     char* str;
-    xmlElement* xmltmp;
 
     if (!el)
         return NULL;
@@ -47,9 +47,9 @@ char* create_formatted_name(xmlElement* el)
     {
         count_twins(el, &ia, &ib);
         ia += INDEX_BASE;
-        ic = (int)ceil(log10(ia));
+        ic = (int)floor(log10(ia)) + 1;
         
-        str = malloc(strlen(el->name) + 2 + ic);
+        str = malloc(strlen((char*)el->name) + 2 + ic);
         sprintf(str, "%d.%s", ia, el->name);
     }
     else if (el->type == XML_TEXT_NODE) {
@@ -57,8 +57,8 @@ char* create_formatted_name(xmlElement* el)
         strcpy(str, CONTENT_FILENAME);
     } 
     else {
-        str = malloc(strlen(el->name) + 1);
-        strcpy(str, el->name);
+        str = malloc(strlen((char*)el->name) + 1);
+        strcpy(str, (char*)el->name);
     }
 
     return str;
@@ -101,7 +101,7 @@ static int xmlfs_getattr(const char* path, struct stat* stbuf)
 }
 
 static int xmlfs_readdir(const char* path, void* buf, fuse_fill_dir_t filler, 
-        off_t offset, struct fuse_file_info* fi)
+        off_t UNUSED(offset), struct fuse_file_info* UNUSED(fi))
 {
     xmlAttr* attr;
     xmlNode* node = (xmlNode*)findxmlelement(path, xml_rootparent);
@@ -141,7 +141,7 @@ static int xmlfs_open(const char *path, struct fuse_file_info *fi)
 }
 
 static int xmlfs_read(const char *path, char *buf, size_t size,
-        off_t offset, struct fuse_file_info *fi)
+        off_t offset, struct fuse_file_info *UNUSED(fi))
 {
     size_t len;
     xmlElement *xel;
@@ -197,7 +197,7 @@ static struct fuse_opt xmlfs_opts[] = {
     FUSE_OPT_END
 };
 
-static int xmlfs_opt_proc(void* data, const char* arg, int key, struct fuse_args *outargs)
+static int xmlfs_opt_proc(void* UNUSED(data), const char* UNUSED(arg), int key, struct fuse_args *outargs)
 {
     switch(key) {
     case KEY_HELP:
@@ -237,6 +237,7 @@ int main(int argc, char* argv[])
     struct xmlfs_config conf;
     struct fuse_args args = FUSE_ARGS_INIT(argc, argv);
 
+    xmlDoc* xmldoc;
     const char* xmlfile = "/dev/stdin";
 
     memset(&conf, 0, sizeof(conf));
@@ -245,13 +246,16 @@ int main(int argc, char* argv[])
     if (conf.xmlfile)
         xmlfile = conf.xmlfile;
 
-    xmlDoc* xmldoc = xmlReadFile(xmlfile, NULL, 0);
+    xmldoc = xmlReadFile(xmlfile, NULL, 0);
+    
     if (xmldoc == NULL) {
         fprintf(stderr, "Could not read XML\n");
         return 1;
     }
 
-    xml_rootparent = xmlNewNode(NULL, "xmlfs_root");
+    /* FIXME: better way of having root node as top directory
+     * This way causes some strange free's at exit according to valgrind */
+    xml_rootparent = xmlNewNode(NULL, (xmlChar*)"xmlfs_root");
     if (!xmlAddChild(xml_rootparent, xmlDocGetRootElement(xmldoc))) {
         fprintf(stderr, "Error creating XML node\n");
         return 1;
@@ -261,6 +265,9 @@ int main(int argc, char* argv[])
     
     xmlFreeDoc(xmldoc);
     xmlCleanupParser();
+    if (conf.xmlfile)
+        free(conf.xmlfile);
+    fuse_opt_free_args(&args);
 
     return ret;
 }

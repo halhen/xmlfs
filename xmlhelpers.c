@@ -9,6 +9,9 @@
  * http://code.k2h.se
  */
 
+#include <string.h>
+
+#include "global.h"
 #include "xmlhelpers.h"
 
 xmlElement* _findxmlelement(const char* path, xmlNode* parent)
@@ -37,8 +40,8 @@ xmlElement* _findxmlelement(const char* path, xmlNode* parent)
 
     /* Search nodes - which are indexed */
     for (node = parent->children, counter = INDEX_BASE; node; node = node->next) {
-        len = strlen(node->name);
-        if (strncmp(node->name, path, len) == 0 &&
+        len = strlen((char*)node->name);
+        if (strncmp((char*)node->name, path, len) == 0 &&
                 (path[len] == '/' || path[len] == '\0')) {
             if (counter == index)
                 break;
@@ -51,7 +54,7 @@ xmlElement* _findxmlelement(const char* path, xmlNode* parent)
 
     /* No node found, try attributes - which aren't indexed */
     for (attr = parent->properties; attr; attr = attr->next) {
-        if (strcmp(attr->name, path) == 0)
+        if (strcmp((char*)attr->name, path) == 0)
             return (xmlElement*)attr;
     }
 
@@ -76,10 +79,10 @@ char* node_value(xmlElement* xel)
         return NULL;
 
     if (xel->type == XML_ATTRIBUTE_NODE && xel->parent)
-        return xmlGetProp((xmlNode*)xel->parent, xel->name);
+        return (char*)xmlGetProp((xmlNode*)xel->parent, xel->name);
 
     if (xel->type == XML_TEXT_NODE && xel->parent)
-        return xmlNodeGetContent((xmlNode*)xel->parent);
+        return (char*)xmlNodeGetContent((xmlNode*)xel->parent);
 
     return NULL;
 }
@@ -98,13 +101,13 @@ void count_twins(xmlElement* el, int *twins_before, int *twins_total)
         return;
 
     for (tmp = (xmlElement*)el->prev; tmp; tmp = (xmlElement*)tmp->prev) {
-        if (el->type == tmp->type && strcmp(el->name, tmp->name) == 0)
+        if (el->type == tmp->type && strcmp((char*)el->name, (char*)tmp->name) == 0)
             before += 1;
     }
     total = before + 1;
 
     for (tmp = (xmlElement*)el->next; tmp; tmp = (xmlElement*)tmp->next) {
-        if (el->type == tmp->type && strcmp(el->name, tmp->name) == 0)
+        if (el->type == tmp->type && strcmp((char*)el->name, (char*)tmp->name) == 0)
             total += 1;
     }
 
