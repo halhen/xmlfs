@@ -222,7 +222,7 @@ static int xmlfs_opt_proc(void* UNUSED(data), const char* UNUSED(arg), int key, 
         fuse_main(outargs->argc, outargs->argv, &fileops, NULL);
         exit(1);
     case KEY_VERSION:
-        fprintf(stderr, "xmlfs version 0.0.1a\n");
+        fprintf(stderr, "xmlfs version 0.0.1\n");
         fuse_opt_add_arg(outargs, "--version");
         fuse_main(outargs->argc, outargs->argv, &fileops, NULL);
         exit(0);
