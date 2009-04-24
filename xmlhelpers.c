@@ -19,8 +19,8 @@ xmlElement* _findxmlelement(const char* path, xmlNode* parent)
  * then try attributes */
 {
     size_t len;
-    xmlNode *node;
-    xmlAttr *attr;
+    xmlNode *node = NULL;
+    xmlAttr *attr = NULL;
 
     int counter;
     int index = INDEX_BASE;
@@ -95,7 +95,7 @@ void count_twins(xmlElement* el, int *twins_before, int *twins_total)
 {
     int before = 0;
     int total = 0;
-    xmlElement* tmp;
+    xmlElement* tmp = NULL;
 
     if (!el || (!twins_before && !twins_total))
         return;

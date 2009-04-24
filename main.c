@@ -38,7 +38,7 @@ xmlNode* xml_rootparent;
 char* create_formatted_name(xmlElement* el)
 {
     int ia, ib, ic;
-    char* str;
+    char* str = NULL;
 
     if (!el)
         return NULL;
@@ -144,10 +144,9 @@ static int xmlfs_read(const char *path, char *buf, size_t size,
         off_t offset, struct fuse_file_info *UNUSED(fi))
 {
     size_t len;
-    xmlElement *xel;
     char* content = NULL;
+    xmlElement *xel = findxmlelement(path, xml_rootparent);
 
-    xel = findxmlelement(path, xml_rootparent);
     if (!xel)
         return -ENOENT;
 
@@ -237,7 +236,7 @@ int main(int argc, char* argv[])
     struct xmlfs_config conf;
     struct fuse_args args = FUSE_ARGS_INIT(argc, argv);
 
-    xmlDoc* xmldoc;
+    xmlDoc* xmldoc = NULL;
     const char* xmlfile = "/dev/stdin";
 
     memset(&conf, 0, sizeof(conf));
