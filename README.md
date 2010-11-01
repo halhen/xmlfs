@@ -1,8 +1,7 @@
 # xmlfs
 xmlfs is an userspace application that lets you represent an XML file as a directory structure for easy access. In this early version, xmlfs only supports read operations. This may be extended in the future.
 
-* [latest release](http://www.k2h.se/code/dl/xmlfs-CURVERSION.tar.gz)
-* [source repository](http://github.com/halhen/xmlfs/tree/master)
+* [source repository](http://github.com/halhen/xmlfs)
 
 Distribution specific links:
 
@@ -56,6 +55,10 @@ Finally, as root:
 
     # make install
 
+To uninstall, as root:
+
+    # make uninstall
+
 ## Usage
     $ mkdir mount_dir/
     $ xmlfs -o xmlfile=file.xml mount_dir/
@@ -68,8 +71,9 @@ Fore more information, please run `xmlfs --help` or have a look at the [FUSE wik
 ## Limitations
 In this early version, xmlfs is a read-only filesystem. Also, it only reads basic XML and usage with non-ASCII characters has not been tested.
 
+### Known errors:
+
+* valgrind reports false free()'s from using xml_rootparent
+
 ## License
 Copyright (c) 2009 Henrik Hallberg <halhen@k2h.se>. Released under GPL 2, see LICENSE for details. Please report bugs or feature requests by email or at github.
-
-* <http://code.k2h.se>
-* <http://github.com/halhen/xmlfs/tree/master>
