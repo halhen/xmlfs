@@ -6,7 +6,7 @@
 # Contributor: halhen <halhen at k2h dot se>
 
 pkgname=xmlfs
-pkgver=0.0.2
+pkgver=0.0.3
 pkgrel=1
 pkgdesc="mount xml files as directory structures"
 license=(GPL)
@@ -27,11 +27,11 @@ build() {
         msg "Repository cloned"
     fi
 
-    msg "Using version $pkgver..."
-    git checkout $pkgver || return 1
-
     rm -rf "$srcdir/$pkgname-build"
     cp -R "$srcdir/$pkgname"{,"-build"}
+
+    msg "Using version $pkgver..."
+    git checkout $pkgver || return 1
 
     msg "Starting make ..."
     cd "$srcdir/$pkgname-build"
