@@ -6,7 +6,7 @@
  * Copyright (c) 2009 Henrik Hallberg <halhen@k2h.se>
  * Please report bugs of feature requests by email
  *
- * http://code.k2h.se
+ * http://github.com/halhen/xmlfs
  */
 
 #include <string.h>
