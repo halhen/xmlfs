@@ -13,6 +13,7 @@ license=(GPL)
 arch=('i686' 'x86_64')
 url=http://github.com/halhen/xmlfs
 depends=('fuse>=2.6' libxml2)
+makedepends=(git)
 source=()
 
 build() {
