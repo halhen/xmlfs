@@ -158,7 +158,7 @@ static int xmlfs_read(const char *path, char *buf, size_t size,
     }
 
     len = strlen(content);
-    if (offset < len) {
+    if ((size_t)offset < len) {
         if (offset + size > len) {
             size = len - offset;
         }
