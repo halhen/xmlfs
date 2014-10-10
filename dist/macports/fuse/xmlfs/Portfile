@@ -1,0 +1,28 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+# $Id$
+
+PortSystem          1.0
+
+name                xmlfs
+version             0.1.1
+categories          fuse
+platforms           darwin
+maintainers         ross-williams.net:ross
+license             GPL-2+
+
+description         A read-only representation of an XML file as a FUSE filesystem
+
+long_description    xmlfs is a read-only filesystem, generated from an XML file, \
+                    which runs in userspace, using the FUSE kernel module.
+
+homepage            https://github.com/halhen/xmlfs
+
+depends_lib         port:osxfuse
+
+fetch.type          git
+git.url             https://github.com/halhen/xmlfs.git
+git.branch          0.1.1
+
+configure           {
+    reinplace -locale C "s|/usr|${prefix}|g" ${worksrcpath}/config.mk
+}
